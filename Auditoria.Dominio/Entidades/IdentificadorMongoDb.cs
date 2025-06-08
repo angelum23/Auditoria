@@ -1,6 +1,15 @@
-﻿namespace Auditoria.Dominio.Entidades;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
-public class IdentificadorMongoDb : ITemIdMongoDb
+namespace Auditoria.Dominio.Entidades;
+
+public class IdentificadorMongoDb : IEntidadeMongoDb
 {
-    public required string Id { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public required ObjectId Id { get; set; }
+    
+    [BsonElement("DataCriacao")]
+    [BsonRepresentation(BsonType.DateTime)]
+    public DateTime DataCriacao { get; set; }
 }

@@ -4,6 +4,7 @@ using Auditoria.Dominio.Interfaces;
 using Auditoria.Infra.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using MongoDB.Bson;
 
 namespace Auditoria.Aplicacao.Historicos;
 
@@ -20,10 +21,11 @@ public class AplicHistorico : IAplicHistorico
     
     public async Task Inserir(HttpRequest request, HttpStatusCode statusCode)
     {
+        var id = new ObjectId();
         var reg = new Historico
         {
-            Id = Guid.NewGuid().ToString(),
-            DataHora = DateTime.Now,
+            Id = id,
+            DataHora = id.CreationTime,
             ChaveApi = _ambienteHelper.RecuperarUsuario() ?? string.Empty,
             CodigoTenant = _ambienteHelper.RecuperarCodigoTenant(),
             CodigoUnidade = _ambienteHelper.RecuperarCodigoUnidade(),

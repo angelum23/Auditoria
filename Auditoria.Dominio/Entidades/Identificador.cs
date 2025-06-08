@@ -1,6 +1,6 @@
 ﻿namespace Auditoria.Dominio.Entidades;
 
-public class Identificador : IEntidade, ITemId
+public class Identificador : IEntidade
 {
     public int Id { get; set; }
     

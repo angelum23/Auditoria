@@ -45,9 +45,9 @@ public abstract class AplicBase<TEntidade, TView> : ApplicationService, IAplicBa
     
     protected virtual IQueryable<TEntidade> AplicarOrdenacaoPadrao(IQueryable<TEntidade> query)
     {
-        if (typeof(TEntidade).IsAssignableTo(typeof(ITemId)))
+        if (typeof(TEntidade).IsAssignableTo(typeof(IdentificadorMongoDb)))
         {
-            return query.OrderByDescending(e => ((ITemId)e).Id);
+            return query.OrderByDescending(e => ((IEntidadeMongoDb)e).Id);
         }
 
         throw new Exception("Ordenação obrigatória");

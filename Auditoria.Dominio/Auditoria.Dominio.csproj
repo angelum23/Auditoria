@@ -14,4 +14,8 @@
       <ProjectReference Include="..\Auditoria.Infra\Auditoria.Infra.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MongoDB.Bson" Version="2.28.0" />
+    </ItemGroup>
+
 </Project>
