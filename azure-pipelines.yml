@@ -1,0 +1,117 @@
+name: $(BuildDefinitionName)_$(date:yyyyMMdd)$(rev:.r)
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - zeus
+      - master
+  paths:
+    exclude:
+      - azure-pipelines.yaml
+      - docker-compose.yml
+      - Makefile
+      - kubernetes/*
+      - README.md
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+resources:
+  repositories:
+  - repository: CentralPipelines
+    type: git
+    name: InfraDevOps/CentralPipelines
+
+  - repository: NextFitHubCD
+    type: git
+    name: InfraDevOps/NextFitHubCD
+
+parameters:
+  - name: PreviewVersions
+    displayName: ".Net Include Preview Versions"
+    type: boolean
+    default: "false"
+
+  - name: EnableSonarqube
+    displayName: "Enable Stage Sonarqube"
+    type: boolean
+    default: false
+
+  - name: NugetVersion
+    displayName: "Nuget Version"
+    type: string
+    default: '6.12.1'
+
+  - name: TargetRuntime
+    displayName: "Build Target Runtime"
+    type: string
+    default: 'linux-x64'
+
+  - name: BuildArtifact
+    displayName: "Build Artifact"
+    type: boolean
+    default: "false"
+
+variables:
+  imageFolder: './'  # Substitua pelo caminho da pasta com os arquivos da imagem Docker
+  buildConfiguration: 'Release'
+  dotNetFramework: 'net8.0'
+  dotNetVersion: '8.0.x'
+  targetRuntime: '${{ parameters.TargetRuntime }}'
+  DockerRegistry: 'DockerRegistryNextFit-$(System.TeamProject)'
+  keyvaultName: kv-nextfit-desenv-devops # Key vault for passwords
+  SubscriptionId: 'Azure_MicrosoftStartups-$(System.TeamProject)' # Assinatura da Azure para conexão com a Key Vault
+  NUGET_PACKAGES: $(System.DefaultWorkingDirectory)/packages
+
+## Link útil
+## https://blogs.blackmarble.co.uk/rfennell/using-azure-devops-stage-dependency-variables-with-conditional-stage-and-job-execution/
+
+stages:
+  - stage: Builds
+    displayName: 'Builds'
+    jobs:   
+    - job: BuildContainer
+      displayName: 'Build Application Docker Image'
+      steps:
+        - template: docker/docker-build-push.yaml@CentralPipelines
+          parameters:
+            imageName: '$(Build.Repository.Name)'
+            imageFolder: $(imageFolder)
+            registry: $(DockerRegistry)
+
+  - stage: Zeus
+    displayName: 'Deploy Zeus'
+    dependsOn: Builds
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/zeus'))
+    jobs:
+    - deployment: DeploymentWithoutMigrations
+      displayName: 'Deploy Zeus'
+      environment: zeus
+      strategy:
+       runOnce:
+          deploy:
+            steps:
+            - checkout: NextFitHubCD
+              persistCredentials: "true"
+              clean: "true"
+
+            - template: k8s/kustomize-manifests-v2.yaml@CentralPipelines
+
+  - stage: Production
+    displayName: 'Deploy Production'
+    dependsOn: Builds
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    jobs:
+    - deployment: DeploymentJob
+      displayName: 'Deploy Production'
+      environment: production
+      strategy:
+       runOnce:
+          deploy:
+            steps:
+            - checkout: NextFitHubCD
+              persistCredentials: "true"
+              clean: "true"
+
+            - template: k8s/kustomize-manifests-v2.yaml@CentralPipelines

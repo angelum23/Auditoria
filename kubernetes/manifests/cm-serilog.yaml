@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  annotations: {}
+  labels:
+    app: auditoria
+  name: auditoria-cm-serilog
+data:
+  Serilog__MinimumLevel__Default: 'Debug'
+  Serilog__MinimumLevel__Override__Host: 'Debug'
+  Serilog__MinimumLevel__Override__Microsoft: 'Debug'
+  Serilog__MinimumLevel__Override__Microsoft.AspNetCore: 'Debug'
+  Serilog__MinimumLevel__Override__Microsoft.Hosting.Lifetime: 'Debug'
+  Serilog__MinimumLevel__Override__Microsoft.EntityFrameworkCore: 'Debug'
+  Serilog__MinimumLevel__Override__Microsoft.EntityFrameworkCore.Database.Command: 'Debug'
+  Serilog__MinimumLevel__Override__System: 'Debug'

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: auditoria
+  name: auditoria
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auditoria
+  template:
+    metadata:
+      labels:
+        app: auditoria
+      annotations:
+        instrumentation.opentelemetry.io/inject-dotnet: "true"
+    spec:
+      containers:
+      - image: auditoria:latest
+        name: auditoria
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          protocol: TCP
+          name: http
+        envFrom:
+        - configMapRef:
+            name: auditoria-connection-strings
+        - configMapRef:
+            name: auditoria-configmap
+        - configMapRef:
+            name: auditoria-cm-serilog
+        resources:
+          requests:
+            cpu: '200m'
+            memory: "800Mi"
+          limits:
+            cpu: '1'
+            memory: "4Gi"

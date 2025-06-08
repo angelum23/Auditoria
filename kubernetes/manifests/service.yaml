@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: auditoria
+  name: auditoria-service
+spec:
+  selector:
+    app: auditoria
+  ports:
+    - protocol: TCP
+      port: 8080
+  type: ClusterIP
