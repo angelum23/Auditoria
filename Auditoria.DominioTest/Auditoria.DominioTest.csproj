@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoFixture" Version="5.0.0-preview0012" />
+      <PackageReference Include="AutoFixture.AutoFakeItEasy" Version="5.0.0-preview0012" />
+      <PackageReference Include="AutoFixture.AutoMoq" Version="5.0.0-preview0012" />
+      <PackageReference Include="FakeItEasy" Version="8.3.0" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+      <PackageReference Include="xunit" Version="2.9.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Auditoria.Dominio\Auditoria.Dominio.csproj" />
+      <ProjectReference Include="..\Auditoria.MongoDb\Auditoria.MongoDb.csproj" />
+      <ProjectReference Include="..\Auditoria.TestInfra\Auditoria.TestInfra.csproj" />
+    </ItemGroup>
+
+</Project>

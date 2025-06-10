@@ -5,30 +5,25 @@ using MongoDB.Driver;
 
 namespace Auditoria.Mongo.Base.Repositorios;
 
-public class RepBaseMongoDb<TEntidade> : IRepBaseMongoDb<TEntidade>
+public abstract class RepBaseMongoDb<TEntidade>(IMongoDatabase mongoDatabase) : IRepBaseMongoDb<TEntidade>
     where TEntidade : IdentificadorMongoDb
 {
-    private readonly IMongoCollection<TEntidade> _collection;
-    
-    public RepBaseMongoDb(IMongoDatabase mongoDatabase)
+    private readonly IMongoCollection<TEntidade> _collection = mongoDatabase.GetCollection<TEntidade>(typeof(TEntidade).Name);
+
+    public virtual async Task<TEntidade> CreateAsync(TEntidade model)
     {
-        _collection = mongoDatabase.GetCollection<TEntidade>(typeof(TEntidade).Name);
-    }
-    
-    public async Task<TEntidade> CreateAsync(TEntidade model)
-    {
-        model.Id = new ObjectId();
+        model.Id = ObjectId.GenerateNewId();
         model.DataCriacao = model.Id.CreationTime;
         await _collection.InsertOneAsync(model);
         return model;
     }
     
-    public async Task DeleteAsync(string id)
+    public virtual async Task DeleteAsync(string id)
     {
         await _collection.DeleteOneAsync(c => c.Id.ToString() == id);
     }
 
-    public async Task<IEnumerable<TEntidade>> GetAllAsync(int offset, int fetch)
+    public virtual async Task<IEnumerable<TEntidade>> GetAllAsync(int offset, int fetch)
     {
         var filter = Builders<TEntidade>.Filter.Empty;
 
@@ -39,7 +34,7 @@ public class RepBaseMongoDb<TEntidade> : IRepBaseMongoDb<TEntidade>
             .ToListAsync();
     }
 
-    public async Task<TEntidade> GetByIdAsync(string id)
+    public virtual async Task<TEntidade> GetByIdAsync(string id)
     {
         return await _collection.Find(model => model.Id.ToString() == id).FirstOrDefaultAsync();
     }
