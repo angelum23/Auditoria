@@ -26,7 +26,6 @@ public static class InfraModule
         );
         
         services.Configure<RabbitMqConfig>(configuration.GetSection("RabbitMq"));
-        services.AddHostedService<TesteConsumer>();
         
         return services;
     }
