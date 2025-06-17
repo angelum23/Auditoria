@@ -4,6 +4,7 @@ using Auditoria.Api.Erros;
 using Auditoria.Api.Extensions;
 using Auditoria.Aplicacao;
 using Auditoria.Infra;
+using Auditoria.Infra.RabbitMq;
 using Auditoria.Mongo;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -59,10 +60,6 @@ builder.Services.AddSwaggerGen(c =>
     c.AddSecurityRequirement(requeriment);
 
 });
-
-// Adiciona filtro de api key a nivel de controller ou endpoint
-// Necessário adicionar [ServiceFilter(typeof(ApiKeyAuthFilter))] como atributo para "ativar" o filtro
-// builder.Services.AddScoped<ApiKeyAuthFilter>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddCors(x => x.AddDefaultPolicy(option =>

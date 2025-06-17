@@ -1,5 +1,6 @@
 ﻿using Auditoria.Dominio.Entidades;
 using Auditoria.Dominio.Interfaces;
+using MongoDB.Bson;
 
 namespace Auditoria.Dominio.Base;
 
