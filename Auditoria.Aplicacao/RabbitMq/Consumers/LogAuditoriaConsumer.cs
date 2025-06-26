@@ -1,8 +1,8 @@
 ﻿using System.Text;
 using Auditoria.Dominio.Auditaveis;
+using Auditoria.Dominio.Interfaces;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
@@ -14,18 +14,16 @@ public class LogAuditoriaConsumer : BackgroundService
 {
     private readonly ILogger<LogAuditoriaConsumer> _logger;
     private readonly IRabbitMqConnectionManager _connectionManager;
-    private readonly RabbitMqConfig _settings;
     private IModel? _channel;
-    private readonly ServLogAuditoria _servLogAuditoria;
+    private readonly IServLogAuditoria _servLogAuditoria;
 
     public LogAuditoriaConsumer(
         ILogger<LogAuditoriaConsumer> logger,
-        IOptions<RabbitMqConfig> options,
-        ServLogAuditoria servLogAuditoria)
+        IRabbitMqConnectionManager rabbitMqConnectionManager,
+        IServLogAuditoria servLogAuditoria)
     {
         _logger = logger;
-        _settings = options.Value;
-        _connectionManager = new RabbitMqConnectionManager(_settings);
+        _connectionManager = rabbitMqConnectionManager;
         _servLogAuditoria = servLogAuditoria;
     }
 
@@ -35,7 +33,7 @@ public class LogAuditoriaConsumer : BackgroundService
         {
             _channel = _connectionManager.GetChannel();
 
-            _logger.LogInformation($"Conectado ao RabbitMQ em {_settings.HostName}, esperando mensagens na fila '{_settings.QueueName}'.");
+            _logger.LogInformation($"Conectado ao RabbitMQ em {_connectionManager.GetHost()}, esperando mensagens na fila '{_connectionManager.GetQueueName()}'.");
 
             var consumer = new AsyncEventingBasicConsumer(_channel);
             consumer.Received += async (model, eventArgs) =>
@@ -50,7 +48,7 @@ public class LogAuditoriaConsumer : BackgroundService
             };
 
             var consumerTag = _channel.BasicConsume(
-                queue: _settings.QueueName,
+                queue: _connectionManager.GetQueueName(),
                 autoAck: false,
                 consumer: consumer
             );

@@ -4,7 +4,7 @@ using MongoDB.Bson;
 
 namespace Auditoria.Dominio.Base;
 
-public class ServBaseMongoDb<T>(IRepBaseMongoDb<T> rep) where T : IdentificadorMongoDb
+public class ServBaseMongoDb<T>(IRepBaseMongoDb<T> rep) : IServBaseMongoDb<T> where T : IdentificadorMongoDb
 {
     public async Task<T> Inserir(T entidade)
     {
