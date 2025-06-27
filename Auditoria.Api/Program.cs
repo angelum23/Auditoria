@@ -3,8 +3,8 @@ using Auditoria.Api.Autenticacao;
 using Auditoria.Api.Erros;
 using Auditoria.Api.Extensions;
 using Auditoria.Aplicacao;
+using Auditoria.Dominio.Infra;
 using Auditoria.Infra;
-using Auditoria.Infra.RabbitMq;
 using Auditoria.Mongo;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -18,11 +18,12 @@ builder.Host.UseSerilog((context, configuration) =>
 // builder.Services.AddAuthentication().AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, null);
 
 builder.Services.AddMongoDbContext(builder.Configuration);
-builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfra(builder.Configuration);
-
+builder.Services.AddDomain();
+builder.Services.AddApplication();
 builder.Services.AddControllers()
     .AddJsonOptions(opt=> { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
+
 
 builder.Services.AddProblemDetails();
 builder.Services.AddApiVersioning().AddMvc();

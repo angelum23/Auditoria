@@ -19,12 +19,10 @@ public static class InfraModule
             .AddClasses(classes => classes.AssignableTo<ITransientDependency>())
             .AsImplementedInterfaces()
             .WithTransientLifetime()
-            .AddClasses(x => x.Where(y => y is { IsPublic: true, IsAbstract: false } && y.GetInterfaces().Any(z => z.Namespace == null || !z.Namespace.StartsWith("System") && z.Name != "IHostedService")))
-            .AsImplementedInterfaces()
-            .AsImplementedInterfaces()
-            .WithScopedLifetime()
         );
         
+        services.AddSingleton<IRabbitMqConnectionManager, RabbitMqConnectionManager>();
+
         services.Configure<RabbitMqConfig>(configuration.GetSection("RabbitMq"));
         
         return services;

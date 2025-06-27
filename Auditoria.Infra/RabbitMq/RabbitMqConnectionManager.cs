@@ -1,19 +1,22 @@
-﻿using Auditoria.Infra.DependencyInjection;
+﻿using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 
 namespace Auditoria.Infra.RabbitMq;
 
-public class RabbitMqConnectionManager : IRabbitMqConnectionManager, ISingletonDependency
+public class RabbitMqConnectionManager : IRabbitMqConnectionManager
 {
-    private readonly RabbitMqConfig _settings;
+    public readonly RabbitMqConfig _settings;
     private IConnection? _connection;
     private IModel? _channel;
 
-    public RabbitMqConnectionManager(RabbitMqConfig settings)
+    public RabbitMqConnectionManager(IOptions<RabbitMqConfig> options)
     {
-        _settings = settings;
+        _settings = options.Value;
     }
 
+    public string GetHost() => _settings.HostName;
+    public string GetQueueName() => _settings.QueueName;
+    
     public IModel GetChannel()
     {
         if (_channel != null)
