@@ -11,12 +11,10 @@ public static class DominioModule
     {
         var assembly = Assembly.GetExecutingAssembly();
         
-        services.AddScoped<IServLogAuditoria, ServLogAuditoria>();
-        
-        // services.Scan(scan => scan.FromAssemblies(assembly)
-        //     .AddClasses(x => x.Where(y => y is { IsPublic: true, IsAbstract: false } && y.GetInterfaces().Any(z => z.Namespace == null || !z.Namespace.StartsWith("System"))))
-        //     .AsImplementedInterfaces()
-        //     .WithScopedLifetime());
+        services.Scan(scan => scan.FromAssemblies(assembly)
+            .AddClasses(x => x.Where(y => y is { IsPublic: true, IsAbstract: false } && y.GetInterfaces().Any(z => z.Namespace == null || !z.Namespace.StartsWith("System"))))
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
             
         return services;
     }

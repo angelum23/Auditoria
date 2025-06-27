@@ -1,10 +1,9 @@
-﻿using Auditoria.Infra.DependencyInjection;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 
 namespace Auditoria.Infra.RabbitMq;
 
-public class RabbitMqConnectionManager : IRabbitMqConnectionManager, ISingletonDependency
+public class RabbitMqConnectionManager : IRabbitMqConnectionManager
 {
     public readonly RabbitMqConfig _settings;
     private IConnection? _connection;
