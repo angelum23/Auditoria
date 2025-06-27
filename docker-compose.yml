@@ -9,7 +9,6 @@
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: '8080'
-      TipoAmb: Sandbox # Possible Values: Sandbox, Zeus, Produção
       OTEL_EXPORTER_OTLP_ENDPOINT: 'http://aspire:18890'
       OTEL_SERVICE_NAME: 'auditoria'
       APPLICATIONINSIGHTS_CONNECTION_STRING: 'InstrumentationKey=00000000-0000-0000-0000-000000000000;'
@@ -22,8 +21,6 @@
       Serilog__MinimumLevel__Override__Microsoft.Hosting.Lifetime: 'Information'
       Serilog__MinimumLevel__Override__System: 'Information'
       Serilog__MinimumLevel__Override__Microsoft.EntityFrameworkCore.Database.Command: 'Information'
-      ConnectionStrings__Conexao: Server=dbpostgres.appnext.fit;Port=5432;Database=sandbox;User Id=sa_sandbox;Password=>N4+Fd51;Enlist=true;Include Error Detail=true;Application Name=auditoria-docker-compose;
-      ConnectionStrings__Replica: Server=dbpostgres.appnext.fit;Port=5432;Database=sandbox;User Id=sa_sandbox;Password=>N4+Fd51;Enlist=true;Include Error Detail=true;Application Name=auditoria-docker-compose;
       ConnectionStrings__Mongo: mongodb://mongodb:27017/Auditoria
       ConnectionStrings__Redis: 'redis:6379'      
 
@@ -34,16 +31,6 @@
       - 4317:18889 # OTLP gRPC
       - 4318:18890 # OTLP HTTP
   
-  # # Postgres database.
-  # pgbouncer:
-  #   image: brainsam/pgbouncer:1.7.2
-  #   environment:
-  #     DB_HOST: 54.232.90.197
-  #     DB_USER: sa_sandbox         # define credentials
-  #     DB_PASSWORD: PASSWORD       # define credentials
-  #     DB_port: 5432               # define database
-  #   ports:
-  #     - 6432:6432                 # PgBouncer port
 
   mongodb:
     image: mongo
