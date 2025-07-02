@@ -1,7 +1,5 @@
 ﻿using System.Net;
-using Auditoria.Aplicacao.Historicos;
 using Auditoria.Aplicacao.Results;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
@@ -9,13 +7,7 @@ namespace Auditoria.Api.Controllers.Base;
 
 public class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
 {
-    protected IAplicHistorico AplicHistorico { get; }
-    public ControllerBase(IAplicHistorico aplicHistorico)
-    {
-        AplicHistorico = aplicHistorico;
-    }
-
-    //[NonAction]
+    [NonAction]
     private IActionResult CustomResult<TResposta>(HttpStatusCode statusCode, TResposta resposta)
     {
         var response = new ObjectResult(resposta)
@@ -26,10 +18,13 @@ public class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
         return response;
     }
     
+    [NonAction]
     protected IActionResult Falha(HttpErrorMessage resposta)
     {
         return CustomResult(HttpStatusCode.BadRequest, resposta);
     }
+    
+    [NonAction]
     protected IActionResult Falha(string mensagem = "", object content = null, Enum errorCode = null)
     {
         return Falha(new HttpErrorMessage
@@ -45,33 +40,16 @@ public class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
     [NonAction]
     protected IActionResult Falha(Exception exp)
     {
-        Enum errorCode = null;
-        // if (exp is AppException appException)
-        // {
-        //     errorCode = appException.CodigoErro;
-        //     //new Thread(threadInfo =>
-        //     //{
-        //     //    if (Convert.ToInt32(errorCode) > 1
-        //     //     || TelemetryConfiguration.Active.DisableTelemetry)
-        //     //    {
-        //     //        return;
-        //     //    }
-        //     //    var telemetryClient = new TelemetryClient();
-        //     //    telemetryClient.TrackException(exp);
-        //     //    telemetryClient.Flush();
-        //     //}).Start();
-        // }
-
-        return Falha(exp.Message, null, errorCode);
+        return Falha(exp.Message, null, null);
     }
     
+    [NonAction]
     protected async Task<IActionResult> Falha(Erro erro)
-    {
-        await AplicHistorico.Inserir(Request, HttpStatusCode.BadRequest); 
+    { 
         return Falha(erro.Descricao, null, HttpStatusCode.BadRequest);
     }
     
-    
+    [NonAction]
     protected IActionResult Sucesso(HttpSuccessMessage resposta)
     {
         return CustomResult(HttpStatusCode.OK, resposta);
@@ -79,7 +57,6 @@ public class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
 
     protected async Task<IActionResult> Sucesso([ActionResultObjectValue] object? value)
     {
-        await AplicHistorico.Inserir(Request, HttpStatusCode.OK);
         return CustomResult(HttpStatusCode.OK, value);
     }
 
@@ -91,13 +68,6 @@ public class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
             Message = mensagem,
             Content = content ?? new { }
         });
-    }
-    
-
-    [NonAction]
-    protected IActionResult Lista(HttpListMessage resposta)
-    {
-        return CustomResult(HttpStatusCode.OK, resposta);
     }
 }
 

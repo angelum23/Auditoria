@@ -32,7 +32,7 @@ builder.Services.AddApiVersioning().AddMvc();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger API Pública Next Fit", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger API Auditoria", Version = "v1" });
     c.IncludeXmlComments($@"{AppDomain.CurrentDomain.BaseDirectory}/AuditoriaDoc.xml");
 
     c.AddSecurityDefinition(AuthConsts.ApiKeyDefaultScheme, new OpenApiSecurityScheme
@@ -82,11 +82,8 @@ app.UseExceptionHandler();
 app.MapHealthChecks("/healthz")
     .AllowAnonymous();
 
-// Configure the HTTP request pipeline.
-
 app.UseCors();
 
-//Swagger habilitado em prod, pois é a documentação da api e possui autenticação
 app.UseSwagger();
 app.UseSwaggerUI();
 
