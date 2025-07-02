@@ -1,4 +1,5 @@
-﻿using Auditoria.Dominio.Entidades;
+﻿using Auditoria.Aplicacao.Base.Requests;
+using Auditoria.Dominio.Entidades;
 using Auditoria.Dominio.Interfaces;
 using Auditoria.Infra.Threading;
 using AutoMapper;
@@ -53,11 +54,11 @@ public abstract class AplicBase<TEntidade, TView> : ApplicationService, IAplicBa
         throw new Exception("Ordenação obrigatória");
     }
     
-    protected virtual IQueryable<TEntidade> AplicarPaginacao(IQueryable<TEntidade> query, int skip, int take)
+    protected virtual IQueryable<TEntidade> AplicarPaginacao(IQueryable<TEntidade> query, PagedRequest paginacao)
     {
         return query
-            .Skip(skip)
-            .Take(take);
+            .Skip(paginacao.Skip)
+            .Take(paginacao.Take);
     }
     
     protected virtual IQueryable<TEntidade> RecuperarQueryOrdenada(bool asNoTracking = false)
