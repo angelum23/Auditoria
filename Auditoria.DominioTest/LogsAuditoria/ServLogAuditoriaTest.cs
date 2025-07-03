@@ -1,5 +1,5 @@
-﻿using Auditoria.Dominio.Auditaveis;
-using Auditoria.Dominio.Interfaces;
+﻿using Auditoria.Dominio.Interfaces;
+using Auditoria.Dominio.LogsAuditoria;
 using Auditoria.TestInfra;
 using AutoFixture;
 using FakeItEasy;

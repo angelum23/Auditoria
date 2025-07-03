@@ -23,14 +23,14 @@ public abstract class RepBaseMongoDb<TEntidade>(IMongoDatabase mongoDatabase) : 
         await _collection.DeleteOneAsync(c => c.Id.ToString() == id);
     }
 
-    public virtual async Task<IEnumerable<TEntidade>> GetAllAsync(int offset, int fetch)
+    public virtual async Task<List<TEntidade>> GetAllAsync(IPagedRequest paginacao)
     {
         var filter = Builders<TEntidade>.Filter.Empty;
 
         return await _collection
             .Find(filter)
-            .Skip(offset)
-            .Limit(fetch)
+            .Skip(paginacao.Skip)
+            .Limit(paginacao.Take)
             .ToListAsync();
     }
 

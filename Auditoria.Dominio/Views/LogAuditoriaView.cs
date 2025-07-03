@@ -1,4 +1,4 @@
-﻿using Auditoria.Dominio.Auditaveis;
+﻿using Auditoria.Dominio.LogsAuditoria;
 using MongoDB.Bson;
 
 namespace Auditoria.Dominio.Views;

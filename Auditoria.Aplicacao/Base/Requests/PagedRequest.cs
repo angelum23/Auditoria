@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Auditoria.Dominio.Interfaces;
 
 namespace Auditoria.Aplicacao.Base.Requests;
 
 public class PagedRequest : IPagedRequest, IValidatableObject
 {   
     private const int MaximoDeResultadosPorRequest = 100;
-    
-    [Range(0, int.MaxValue)]
-    public int Skip { get; set; }
+
+    [Range(0, int.MaxValue)] public int Skip { get; set; } = 0;
     
     [Range(1, int.MaxValue)]
     public virtual int Take { get; set; } = MaximoDeResultadosPorRequest;

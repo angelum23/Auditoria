@@ -1,4 +1,4 @@
-﻿using Auditoria.Dominio.Auditaveis;
+﻿using Auditoria.Dominio.LogsAuditoria;
 
 namespace Auditoria.Dominio.Interfaces;
 

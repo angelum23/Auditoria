@@ -1,4 +1,4 @@
-﻿using Auditoria.Dominio.Auditaveis;
+﻿using Auditoria.Dominio.LogsAuditoria;
 using Auditoria.Mongo.LogsAuditoria;
 using Auditoria.MongoDbTest.Base;
 using Auditoria.TestInfra;
