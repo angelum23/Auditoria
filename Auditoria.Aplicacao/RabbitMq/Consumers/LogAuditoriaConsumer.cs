@@ -1,6 +1,6 @@
 ﻿using System.Text;
-using Auditoria.Dominio.Auditaveis;
 using Auditoria.Dominio.Interfaces;
+using Auditoria.Dominio.LogsAuditoria;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -37,12 +37,6 @@ public class LogAuditoriaConsumer : BackgroundService
             var consumer = new AsyncEventingBasicConsumer(channel);
             consumer.Received += async (model, eventArgs) =>
             {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    _logger.LogWarning("Cancellation solicitado antes de processar a mensagem.");
-                    return;
-                }
-                
                 if (cancellationToken.IsCancellationRequested)
                 {
                     _logger.LogWarning("CancellationToken detectado dentro do ProcessarMensagem.");

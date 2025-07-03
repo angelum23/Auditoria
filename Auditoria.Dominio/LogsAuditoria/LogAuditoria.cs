@@ -3,7 +3,7 @@ using Auditoria.Dominio.Entidades;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Auditoria.Dominio.Auditaveis;
+namespace Auditoria.Dominio.LogsAuditoria;
 
 public class LogAuditoria : IdentificadorMongoDb
 {

@@ -8,5 +8,5 @@ public interface IRepBaseMongoDb<TEntidade> : IRepository
     Task<TEntidade> CreateAsync(TEntidade reg);
     Task DeleteAsync(string id);
     Task<TEntidade> GetByIdAsync(string id);
-    Task<IEnumerable<TEntidade>> GetAllAsync(int skip, int take);
+    Task<List<TEntidade>> GetAllAsync(IPagedRequest paginacao);
 }

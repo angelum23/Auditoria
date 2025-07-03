@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using Auditoria.Dominio.Auditaveis;
 using Auditoria.Dominio.Interfaces;
 
 namespace Auditoria.Dominio.Infra;

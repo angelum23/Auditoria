@@ -17,11 +17,12 @@ builder.Host.UseSerilog((context, configuration) =>
 // builder.Services.AddScoped<ApiKeyAuthenticationHandler>();
 // builder.Services.AddAuthentication().AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, null);
 
-builder.Services.AddMongoDbContext(builder.Configuration);
-builder.Services.AddInfra(builder.Configuration);
-builder.Services.AddDomain();
-builder.Services.AddApplication();
-builder.Services.AddControllers()
+builder.Services
+    .AddMongoDbContext(builder.Configuration)
+    .AddInfra(builder.Configuration)
+    .AddDomain()
+    .AddApplication()
+    .AddControllers()
     .AddJsonOptions(opt=> { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 
 

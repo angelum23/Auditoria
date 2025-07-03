@@ -1,4 +1,4 @@
-﻿namespace Auditoria.Aplicacao.Base.Requests;
+﻿namespace Auditoria.Dominio.Interfaces;
 
 public interface IPagedRequest
 {

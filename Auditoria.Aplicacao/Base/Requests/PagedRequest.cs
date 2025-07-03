@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Auditoria.Dominio.Interfaces;
 
 namespace Auditoria.Aplicacao.Base.Requests;
 
 public class PagedRequest : IPagedRequest, IValidatableObject
 {   
-    public static int MaximoDeResultadosPorRequest { get; set; } = 30;
-    
-    [Range(0, int.MaxValue)]
-    public int Skip { get; set; }
+    private const int MaximoDeResultadosPorRequest = 100;
+
+    [Range(0, int.MaxValue)] public int Skip { get; set; } = 0;
     
     [Range(1, int.MaxValue)]
     public virtual int Take { get; set; } = MaximoDeResultadosPorRequest;
@@ -17,8 +17,7 @@ public class PagedRequest : IPagedRequest, IValidatableObject
         if (Take > MaximoDeResultadosPorRequest)
         {
             yield return new ValidationResult(
-                $"Total de registros solicitados maior que o máximo permitido de {MaximoDeResultadosPorRequest}"
-                ,
+                $"Total de registros solicitados maior que o máximo permitido de {MaximoDeResultadosPorRequest}",
                 new[] { nameof(Take) });
         }
     }
