@@ -1,4 +1,5 @@
-﻿services:
+﻿version: '3.8'
+services:
   auditoria.api:
     image: auditoria.api
     build:
@@ -9,10 +10,8 @@
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: '8080'
-      OTEL_EXPORTER_OTLP_ENDPOINT: 'http://aspire:18890'
       OTEL_SERVICE_NAME: 'auditoria'
       APPLICATIONINSIGHTS_CONNECTION_STRING: 'InstrumentationKey=00000000-0000-0000-0000-000000000000;'
-      ENABLE_REDIS: 'true'
       Serilog__MinimumLevel__Default: 'Information'
       Serilog__MinimumLevel__Override__Host: 'Information'
       Serilog__MinimumLevel__Override__Microsoft: 'Information'
@@ -22,25 +21,30 @@
       Serilog__MinimumLevel__Override__System: 'Information'
       Serilog__MinimumLevel__Override__Microsoft.EntityFrameworkCore.Database.Command: 'Information'
       ConnectionStrings__Mongo: mongodb://mongodb:27017/Auditoria
-      ConnectionStrings__Redis: 'redis:6379'      
-
-  aspire:
-    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
-    ports:
-      - 18888:18888 # Dashboard UI
-      - 4317:18889 # OTLP gRPC
-      - 4318:18890 # OTLP HTTP
-  
+    networks:
+      - env_local
 
   mongodb:
+    container_name: auditoria.mongodb
     image: mongo
     restart: always
     ports:
       - 27017:27017
+    networks:
+      - env_local
 
-  redis:
-    image: redis/redis-stack
+  rabbitmq:
+    container_name: auditoria.rabbitmq
+    image: rabbitmq:3-management
+    restart: always
     ports:
-      - 6379:6379
-    environment:
-      - vm.overcommit_memory=1
+      - 15672:15672
+      - 5672:5672
+    expose:
+      - 5672
+      - 15672
+    networks:
+      - env_local
+
+networks:
+  env_local:
