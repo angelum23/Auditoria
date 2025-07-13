@@ -1,7 +1,7 @@
 ﻿namespace Auditoria.Dominio.Interfaces;
 
-public interface IServBase<T>
+public interface IServBase<TEntidade, TView>
 {
-    Task<T> Inserir(T entidade);
-    Task<List<T>> Recuperar(IPagedRequest paginacao);
+    Task<TEntidade> Inserir(TEntidade entidade);
+    Task<List<TView>> Recuperar(IPagedRequest paginacao);
 }

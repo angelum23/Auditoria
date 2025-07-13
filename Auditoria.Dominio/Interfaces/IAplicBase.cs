@@ -1,6 +1,6 @@
 ﻿namespace Auditoria.Dominio.Interfaces;
 
-public interface IAplicBase<T>
+public interface IAplicBase<TEntidade, TView>
 {
-    public Task<List<T>> RecuperarAsync(IPagedRequest paginacao);
+    public Task<List<TView>> RecuperarAsync(IPagedRequest paginacao);
 }
