@@ -7,23 +7,23 @@ namespace Auditoria.Dominio.LogsAuditoria;
 
 public class LogAuditoria : IdentificadorMongoDb
 {
-    [BsonElement("IdTenant")]
+    [BsonElement("idtenant")]
     public int CodigoTenant { get; set; }
     
-    [BsonElement("IdUnidade")]
+    [BsonElement("idunidade")]
     public int CodigoUnidade { get; set; }
     
-    [BsonElement("NomeEntidadeAuditada")]
-    public string? NomeEntidadeAuditada { get; set; }
+    [BsonElement("entidadeauditada")]
+    public string? EntidadeAuditada { get; set; }
     
-    [BsonElement("Usuario")]
+    [BsonElement("usuario")]
     public BsonDocument Usuario { get; set; }
     
-    [BsonElement("Tipo")]
+    [BsonElement("tipo")]
     [BsonRepresentation(BsonType.Int32)]
     public TipoLog TipoLog { get; set; }
     
-    [BsonElement("Dados")]
+    [BsonElement("dados")]
     public BsonDocument Dados { get; set; }
 }
 

@@ -2,9 +2,9 @@
 
 namespace Auditoria.Aplicacao.Base;
 
-public class AplicBase<T>(IServBase<T> serv) : IAplicBase<T>
+public class AplicBase<TEntidade, TView>(IServBase<TEntidade, TView> serv) : IAplicBase<TEntidade, TView>
 {
-    public Task<List<T>> RecuperarAsync(IPagedRequest paginacao)
+    public Task<List<TView>> RecuperarAsync(IPagedRequest paginacao)
     {
         return serv.Recuperar(paginacao);
     }

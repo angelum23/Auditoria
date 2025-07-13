@@ -1,8 +1,9 @@
 using System.Text.Json.Serialization;
-using Auditoria.Api.Autenticacao;
+using Asp.Versioning;
 using Auditoria.Api.Erros;
 using Auditoria.Api.Extensions;
 using Auditoria.Aplicacao;
+using Auditoria.Aplicacao.Profiles;
 using Auditoria.Dominio.Infra;
 using Auditoria.Infra;
 using Auditoria.Mongo;
@@ -14,9 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
-// builder.Services.AddScoped<ApiKeyAuthenticationHandler>();
-// builder.Services.AddAuthentication().AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, null);
-
 builder.Services
     .AddMongoDbContext(builder.Configuration)
     .AddInfra(builder.Configuration)
@@ -27,7 +25,12 @@ builder.Services
 
 
 builder.Services.AddProblemDetails();
-builder.Services.AddApiVersioning().AddMvc();
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+}).AddMvc();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -35,32 +38,6 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger API Auditoria", Version = "v1" });
     c.IncludeXmlComments($@"{AppDomain.CurrentDomain.BaseDirectory}/AuditoriaDoc.xml");
-
-    c.AddSecurityDefinition(AuthConsts.ApiKeyDefaultScheme, new OpenApiSecurityScheme
-    {
-        Description = "Api Key para acessar a API",
-        Type = SecuritySchemeType.ApiKey,
-        Name = AuthConsts.ApiKeyHeaderName,
-        In = ParameterLocation.Header
-    });
-
-    var scheme = new OpenApiSecurityScheme
-    {
-        Reference = new OpenApiReference
-        {
-            Type = ReferenceType.SecurityScheme,
-            Id = AuthConsts.ApiKeyDefaultScheme
-        },
-        In = ParameterLocation.Header
-    };
-
-    var requeriment = new OpenApiSecurityRequirement
-    {
-        { scheme, new List<string>() }
-    };
-    
-    c.AddSecurityRequirement(requeriment);
-
 });
 
 builder.Services.AddHttpContextAccessor();
@@ -74,6 +51,7 @@ builder.Services.AddRedis(builder.Configuration);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.AddHealthChecks();
+builder.Services.AddAutoMapper(typeof(ApplicationAutoMapperProfile));
 
 var app = builder.Build();
 
@@ -90,9 +68,6 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
-app.MapControllers()
-    .RequireAuthorization();
+app.MapControllers();
 
 app.Run();

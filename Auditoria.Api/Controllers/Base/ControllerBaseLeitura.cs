@@ -1,19 +1,20 @@
-﻿using Auditoria.Dominio.Interfaces;
+﻿using Auditoria.Aplicacao.Base.Requests;
+using Auditoria.Dominio.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Auditoria.Api.Controllers.Base;
 
 [ApiController]
-[Route("[controller]")]
-public class ControllerBaseLeitura<T>(IAplicBase<T> aplic) : ControllerBase
+[Route("api/[controller]")]
+public class ControllerBaseLeitura<TEntidade, TView>(IAplicBase<TEntidade, TView> aplic) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> RecuperarAsync([FromQuery] IPagedRequest paginacao)
+    public virtual async Task<IActionResult> RecuperarAsync([FromQuery] PagedRequest paginacao)
     {
         try
         {
             var dados = await aplic.RecuperarAsync(paginacao);
-            return Sucesso(content: dados);
+            return Ok(dados);
         }
         catch (Exception e)
         {

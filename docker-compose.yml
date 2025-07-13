@@ -32,6 +32,8 @@ services:
       - 27017:27017
     networks:
       - env_local
+    volumes:
+      - auditoria-mongo-data:/data/db
 
   rabbitmq:
     container_name: auditoria.rabbitmq
@@ -48,3 +50,6 @@ services:
 
 networks:
   env_local:
+    
+volumes:
+  auditoria-mongo-data:

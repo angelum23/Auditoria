@@ -25,13 +25,12 @@ public abstract class RepBaseMongoDb<TEntidade>(IMongoDatabase mongoDatabase) : 
 
     public virtual async Task<List<TEntidade>> GetAllAsync(IPagedRequest paginacao)
     {
-        var filter = Builders<TEntidade>.Filter.Empty;
-
-        return await _collection
-            .Find(filter)
+        var query = _collection
+            .Find(_ => true)
             .Skip(paginacao.Skip)
-            .Limit(paginacao.Take)
-            .ToListAsync();
+            .Limit(paginacao.Take);
+        
+        return await query.ToListAsync();
     }
 
     public virtual async Task<TEntidade> GetByIdAsync(string id)

@@ -9,7 +9,7 @@ public class IdentificadorMongoDb : IEntidadeMongoDb
     [BsonRepresentation(BsonType.ObjectId)]
     public required ObjectId Id { get; set; }
     
-    [BsonElement("DataCriacao")]
+    [BsonElement("datacriacao")]
     [BsonRepresentation(BsonType.DateTime)]
     public DateTime DataCriacao { get; set; }
 }

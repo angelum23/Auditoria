@@ -3,10 +3,13 @@ using MongoDB.Bson;
 
 namespace Auditoria.Dominio.Views;
 
-public class LogAuditoriaView
+public record LogAuditoriaView
 {
-    public string? NomeEntidadeAuditada { get; set; }
-    public BsonDocument Usuario { get; set; }
+    public ObjectId Id { get; set; }
+    public int CodigoTenant { get; set; }
+    public int CodigoUnidade { get; set; }
+    public string? EntidadeAuditada { get; set; }
+    public Dictionary<string, string> Usuario { get; set; }
     public TipoLog TipoLog { get; set; }
-    public BsonDocument Dados { get; set; }
+    public Dictionary<string, string> Dados { get; set; }
 }
