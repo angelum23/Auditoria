@@ -32,7 +32,7 @@ public class LogAuditoriaConsumer : BackgroundService
         {
             var channel = connectionManager.GetChannel();
 
-            _logger.LogInformation($"Conectado ao RabbitMQ em {connectionManager.GetHost()}, esperando mensagens na fila '{connectionManager.GetQueueName()}'.");
+            _logger.LogInformation("Conectado ao RabbitMQ em {host}, esperando mensagens na fila '{queueName}'.", connectionManager.GetHost(), connectionManager.GetQueueName());
 
             var consumer = new AsyncEventingBasicConsumer(channel);
             consumer.Received += async (model, eventArgs) =>
@@ -46,7 +46,7 @@ public class LogAuditoriaConsumer : BackgroundService
                 var body = eventArgs.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
 
-                _logger.LogInformation($"Mensagem recebida da fila: {message}");
+                _logger.LogInformation("Mensagem recebida da fila: {message}", message);
 
                 try
                 {

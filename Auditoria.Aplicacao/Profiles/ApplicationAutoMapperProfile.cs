@@ -22,7 +22,6 @@ public class ApplicationAutoMapperProfile : Profile
             );
         
         CreateMap<LogAuditoria, LogAuditoriaView>()
-            .ForMember(view => view.Usuario, opt => opt.MapFrom(src => src.Usuario))
             .ForMember(view => view.Dados, opt => opt.MapFrom(src => src.Dados));
     }
 }
