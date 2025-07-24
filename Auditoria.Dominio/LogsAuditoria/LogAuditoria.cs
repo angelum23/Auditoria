@@ -13,18 +13,18 @@ public class LogAuditoria : IdentificadorMongoDb
     [BsonElement("idunidade")]
     public int CodigoUnidade { get; set; }
     
+    [BsonElement("idusuario")]
+    public int CodigoUsuario { get; set; }
+    
     [BsonElement("entidadeauditada")]
     public string? EntidadeAuditada { get; set; }
     
-    [BsonElement("usuario")]
-    public BsonDocument Usuario { get; set; }
-    
     [BsonElement("tipo")]
-    [BsonRepresentation(BsonType.Int32)]
+    [BsonRepresentation(BsonType.String)]
     public TipoLog TipoLog { get; set; }
     
     [BsonElement("dados")]
-    public BsonDocument Dados { get; set; }
+    public BsonDocument? Dados { get; set; }
 }
 
 public enum TipoLog

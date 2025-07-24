@@ -1,7 +1,45 @@
 using RabbitMQ.Client;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace RabbitMqPublisher;
+
+public class DadosSerializadosDto
+{
+    [JsonPropertyName("dados")] 
+    public List<string> dados { get; set; } = [];
+}
+
+public class DadosFakesDto
+{
+    [JsonPropertyName("dados")] 
+    public List<DadoFakeDto> Dados { get; set; } = [];
+}
+
+public class DadoFakeDto
+{
+    [JsonPropertyName("idoriginal")]
+    public int CodigoOriginal { get; set; }
+        
+    [JsonPropertyName("idtenant")]
+    public int CodigoTenant { get; set; }
+    
+    [JsonPropertyName("idunidade")]
+    public int CodigoUnidade { get; set; }
+    
+    [JsonPropertyName("idusuario")]
+    public int Usuario { get; set; }
+    
+    [JsonPropertyName("entidadeauditada")]
+    public string? EntidadeAuditada { get; set; }
+    
+    [JsonPropertyName("tipo")]
+    public string TipoLog { get; set; } = ""; //public enum TipoLog { Insercao, Alteracao, Remocao }
+    
+    [JsonPropertyName("dados")]
+    public string? Dados { get; set; } = "";
+}
 
 public class Program
 {
@@ -13,8 +51,7 @@ public class Program
 
     public static void Main()
     {
-
-        const string message = "MensagemDeTeste"; //Substitua pela mensagem desejada e de um compose up que ja vai pra fila.
+        var dadosFake = JsonSerializer.Deserialize<DadosFakesDto>(File.ReadAllText("./DadosFake.json", Encoding.UTF8))?.Dados;
 
         var factory = new ConnectionFactory()
         {
@@ -30,6 +67,10 @@ public class Program
         {
             connection = factory.CreateConnection();
             channel = connection.CreateModel();
+            
+            // Make message persistent
+            var properties = channel.CreateBasicProperties();
+            properties.Persistent = true;
 
             // Declare the queue to ensure it exists (match consumer settings)
             channel.QueueDeclare(queue: QueueName,
@@ -38,19 +79,12 @@ public class Program
                                  autoDelete: false,
                                  arguments: null);
 
-            var body = Encoding.UTF8.GetBytes(message);
-
-            // Make message persistent
-            var properties = channel.CreateBasicProperties();
-            properties.Persistent = true; 
+            var mensagens = dadosFake?.Select(x => JsonSerializer.Serialize(x));
+            //todo: validar encoding
+            var bodies = mensagens?.Select(Encoding.UTF8.GetBytes).ToList();
 
             // Publish
-            channel.BasicPublish(exchange: "",             
-                                 routingKey: QueueName,   
-                                 basicProperties: properties,
-                                 body: body);
-
-            Console.WriteLine($"Foi publicada na fila '{QueueName}' a mensagem: '{message}'");
+            bodies?.ForEach(x => PublicarNoRabbit(x, channel, properties));
         }
         catch (Exception ex)
         {
@@ -65,5 +99,15 @@ public class Program
             try { connection?.Dispose(); } catch {  }
             Console.WriteLine("Publisher finished.");
         }
+    }
+
+    private static void PublicarNoRabbit(byte[] body, IModel channel, IBasicProperties properties)
+    {
+        channel.BasicPublish(exchange: "",             
+            routingKey: QueueName,   
+            basicProperties: properties,
+            body: body);
+        
+        Console.WriteLine($"Foi publicada na fila '{QueueName}' a mensagem: '{body}'");
     }
 }
