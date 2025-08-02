@@ -5,5 +5,5 @@ namespace Auditoria.Dominio.Interfaces;
 
 public interface IServLogAuditoria : IServBase<LogAuditoria, LogAuditoriaView>
 {
-    
+    Task Inserir(InserirLogAuditoriaDTO dto);
 }

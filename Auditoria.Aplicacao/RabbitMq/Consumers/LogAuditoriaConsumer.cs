@@ -50,15 +50,10 @@ public class LogAuditoriaConsumer : BackgroundService
 
                 try
                 {
-                    var log = JsonConvert.DeserializeObject<LogAuditoria>(message);
+                    var log = JsonConvert.DeserializeObject<InserirLogAuditoriaDTO>(message);
                     if (log == null)
                     {
                         throw new JsonException();
-                    }
-
-                    if (log.Id == ObjectId.Empty)
-                    {
-                        log.Id = ObjectId.GenerateNewId();
                     }
 
                     await servLogAuditoria.Inserir(log);

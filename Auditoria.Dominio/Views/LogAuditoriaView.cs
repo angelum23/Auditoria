@@ -11,5 +11,6 @@ public record LogAuditoriaView
     public int CodigoUsuario { get; set; }
     public string? EntidadeAuditada { get; set; }
     public TipoLog TipoLog { get; set; }
-    public Dictionary<string, string> Dados { get; set; }
+    public DateTime DataCriacao { get; set; }
+    public Dictionary<string, string>? Dados { get; set; }
 }
