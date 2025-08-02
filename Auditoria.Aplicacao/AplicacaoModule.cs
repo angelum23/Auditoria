@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Auditoria.Infra.RabbitMq;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -21,7 +20,6 @@ public static class AplicacaoModule
             .WithScopedLifetime());
         
         services.AddHostedService<LogAuditoriaConsumer>();
-        services.AddAutoMapper(assembly);
         return services;
     }
 }

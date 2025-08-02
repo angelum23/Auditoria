@@ -15,10 +15,12 @@ public class ApplicationAutoMapperProfile : Profile
         
         CreateMap<BsonDocument, Dictionary<string, string>?>()
             .ConvertUsing(src =>
-                src.Elements.ToDictionary(
-                    e => e.Name,
-                    e => e.Value.IsBsonNull ? null : e.Value.ToString()
-                )!
+                (src == null
+                    ? null
+                    : src.Elements.ToDictionary(
+                        e => e.Name,
+                        e => e.Value.IsBsonNull ? null : e.Value.ToString()
+                    ))!
             );
         
         CreateMap<string, BsonDocument>()
@@ -27,16 +29,27 @@ public class ApplicationAutoMapperProfile : Profile
                     ? null 
                     : BsonDocument.Parse(src))!);
         
+        CreateMap<DadosInseridor, DadosInseridorView>();
+        CreateMap<DadosAcao, DadosAcaoView>();
         CreateMap<LogAuditoria, LogAuditoriaView>()
-            .ForMember(view => view.Dados, opt => opt.MapFrom(entidade => entidade.DadoDesserializado));
-        
-            //todo: converter para fuso local ao mapear para entidade e ajustar eventuais problemas de map
-            // .ForMember(view => view.DataCriacao, opt => opt.MapFrom(entidade =>
-            //     TimeZoneInfo.ConvertTimeFromUtc(entidade.DataCriacao, 
-            //         TimeZoneInfo.FindSystemTimeZoneById(entidade.CodigoFusoHorario ?? "E. South America Standard Time"))
-            // ));
+            .ForMember(dest => dest.Dados, opt => opt.MapFrom(src => src.DadoDesserializado));
 
         CreateMap<InserirLogAuditoriaDTO, LogAuditoria>()
-            .ForMember(entidade => entidade.DadoDesserializado, opt => opt.MapFrom(dto => dto.DadoSerializado));
+            .ForMember(dest => dest.DadosInseridor, opt => opt.MapFrom(src => new DadosInseridor
+            {
+                CodigoTenant = src.CodigoTenant,
+                CodigoUnidade = src.CodigoUnidade,
+                CodigoUsuario = src.CodigoUsuario
+            }))
+            .ForMember(dest => dest.DadosAcao, opt => opt.MapFrom(src => new DadosAcao
+            {
+                EntidadeAuditada = src.EntidadeAuditada,
+                TipoLog = src.TipoLog
+            }))
+            .ForMember(dest => dest.DadoDesserializado, opt => opt.MapFrom(src => src.DadoSerializado))
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.DataInsercao, opt => opt.Ignore());
+        //todo: converter para fuso local ao mapear para entidade
+
     }
 }

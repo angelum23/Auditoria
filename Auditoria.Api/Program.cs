@@ -55,6 +55,12 @@ builder.Services.AddAutoMapper(typeof(ApplicationAutoMapperProfile));
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var provider = scope.ServiceProvider.GetRequiredService<AutoMapper.IConfigurationProvider>();
+    provider.AssertConfigurationIsValid();
+}
+
 app.UseSerilogRequestLogging();
 app.UseExceptionHandler();
 

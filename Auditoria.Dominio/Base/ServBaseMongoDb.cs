@@ -1,4 +1,5 @@
-﻿using Auditoria.Dominio.Entidades;
+﻿using System.Diagnostics;
+using Auditoria.Dominio.Entidades;
 using Auditoria.Dominio.Interfaces;
 using AutoMapper;
 
@@ -15,6 +16,23 @@ public class ServBaseMongoDb<TEntidade, TView>(IRepBaseMongoDb<TEntidade> rep, I
     public async Task<List<TView>> Recuperar(IPagedRequest paginacao)
     {
         var registros = await rep.GetAllAsync(paginacao);
-        return mapper.Map<List<TView>>(registros);
+        List<TView> resultados;
+        
+        try
+        {
+            resultados = mapper.Map<List<TView>>(registros);
+        }
+        catch (AutoMapperMappingException ex)
+        {
+            Debug.WriteLine($"Erro ao mapear: {ex.Message}");
+            if (ex.InnerException != null)
+            {
+                Debug.WriteLine($"Inner exception: {ex.InnerException.Message}");
+            }
+            
+            throw;
+        }
+
+        return resultados;
     }
 }

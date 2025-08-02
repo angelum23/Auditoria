@@ -89,10 +89,10 @@ public class Program
         finally
         {
             // Clean up
-            try { channel?.Close(); } catch {  }
-            try { channel?.Dispose(); } catch {  }
-            try { connection?.Close(); } catch {  }
-            try { connection?.Dispose(); } catch {  }
+            try { channel?.Close(); } catch { /* ignore */ }
+            try { channel?.Dispose(); } catch { /* ignore */ }
+            try { connection?.Close(); } catch { /* ignore */ }
+            try { connection?.Dispose(); } catch { /* ignore */ }
             Console.WriteLine("Publisher finished.");
         }
     }
