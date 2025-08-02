@@ -12,9 +12,14 @@ public abstract class RepBaseMongoDb<TEntidade>(IMongoDatabase mongoDatabase) : 
 
     public virtual async Task<TEntidade> CreateAsync(TEntidade model)
     {
-        model.Id = ObjectId.GenerateNewId();
-        model.DataCriacao = model.Id.CreationTime.ToUniversalTime();
-        model.CodigoFusoHorario = TimeZoneInfo.Local.Id;
+        var idGerado = ObjectId.GenerateNewId();
+
+        model.Id = idGerado;
+        model.DataInsercao = new DataInsercao
+        {
+            DataCriacao = idGerado.CreationTime.ToUniversalTime(),
+            CodigoFusoHorario = TimeZoneInfo.Local.Id
+        };
         
         await _collection.InsertOneAsync(model);
         return model;

@@ -8,7 +8,13 @@ public class IdentificadorMongoDb : IEntidadeMongoDb
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public required ObjectId Id { get; set; }
-    
+
+    [BsonElement("dataInsercao")]
+    public DataInsercao? DataInsercao { get; set; }
+}
+
+public class DataInsercao
+{
     [BsonElement("datacriacao")]
     [BsonRepresentation(BsonType.DateTime)]
     public DateTime DataCriacao { get; set; }

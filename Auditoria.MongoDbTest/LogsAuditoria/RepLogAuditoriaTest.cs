@@ -24,13 +24,13 @@ public class RepLogAuditoriaTest : RepTestBase
         // Assert
         Assert.NotNull(logResultado);
         Assert.NotEqual(default, logResultado.Id);
-        Assert.Equal(logResultado.Id.CreationTime.Date, logResultado.DataCriacao.Date);
+        Assert.Equal(logResultado.Id.CreationTime.Date, logResultado.DataInsercao!.DataCriacao.Date);
         
         var colecao = _database.GetCollection<LogAuditoria>(nameof(LogAuditoria));
         var logSalvoNoBanco = await colecao.Find(l => l.Id == logResultado.Id).SingleOrDefaultAsync();
 
         Assert.NotNull(logSalvoNoBanco);
         Assert.Equal(logResultado.Id, logSalvoNoBanco.Id);
-        Assert.Equal(logResultado.DataCriacao, logSalvoNoBanco.DataCriacao);
+        Assert.Equal(logResultado.DataInsercao!.DataCriacao, logSalvoNoBanco.DataInsercao!.DataCriacao);
     }
 }
