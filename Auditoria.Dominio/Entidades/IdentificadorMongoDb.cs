@@ -12,4 +12,8 @@ public class IdentificadorMongoDb : IEntidadeMongoDb
     [BsonElement("datacriacao")]
     [BsonRepresentation(BsonType.DateTime)]
     public DateTime DataCriacao { get; set; }
+    
+    [BsonElement("codigofusohorario")]
+    [BsonRepresentation(BsonType.String)]
+    public string CodigoFusoHorario { get; set; } = string.Empty;
 }

@@ -51,7 +51,7 @@ public class Program
 
     public static void Main()
     {
-        var dadosFake = JsonSerializer.Deserialize<DadosFakesDto>(File.ReadAllText("./DadosFake.json", Encoding.UTF8))?.Dados;
+        var dadosFake = DadosFake.RecuperarDadosFake();
 
         var factory = new ConnectionFactory()
         {
@@ -79,12 +79,8 @@ public class Program
                                  autoDelete: false,
                                  arguments: null);
 
-            var mensagens = dadosFake?.Select(x => JsonSerializer.Serialize(x));
-            //todo: validar encoding
-            var bodies = mensagens?.Select(Encoding.UTF8.GetBytes).ToList();
-
             // Publish
-            bodies?.ForEach(x => PublicarNoRabbit(x, channel, properties));
+            dadosFake.ForEach(x => PublicarNoRabbit(x, channel, properties));
         }
         catch (Exception ex)
         {
@@ -101,13 +97,15 @@ public class Program
         }
     }
 
-    private static void PublicarNoRabbit(byte[] body, IModel channel, IBasicProperties properties)
+    private static void PublicarNoRabbit(string dados, IModel channel, IBasicProperties properties)
     {
+        var body = Encoding.UTF8.GetBytes(dados);
+        
         channel.BasicPublish(exchange: "",             
             routingKey: QueueName,   
             basicProperties: properties,
             body: body);
         
-        Console.WriteLine($"Foi publicada na fila '{QueueName}' a mensagem: '{body}'");
+        Console.WriteLine($"Foi publicada na fila '{QueueName}' a mensagem: '{dados}'");
     }
 }
