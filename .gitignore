@@ -1,7 +1,82 @@
+#############################################
+# .NET / C# build artifacts
+#############################################
 bin/
 obj/
+out/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.user
+*.suo
+*.tmp
+*.bak
+*.swp
 .sonarqube/
-/packages/
+
+#############################################
+# Rider / IntelliJ
+#############################################
+.idea/
+*.iml
+*~
+*.iws
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries
+.idea/httpRequests
+.idea/shelf
 riderModule.iml
 /_ReSharper.Caches/
+
+#############################################
+# Logs e dumps
+#############################################
+*.log
+*.nlog
+*.ser
+*.json.log
+logs/
+Logs/
+dump.rdb
+
+#############################################
+# Sistema Operacional
+#############################################
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+#############################################
+# Ferramentas
+#############################################
+# VSCode (se alguém abrir o projeto lá)
+.vscode/
+
+# Testes / Coverage
+coverage/
+*.coverage
+*.coveragexml
+TestResults/
+
+# Pacotes
+*.nupkg
+*.snupkg
+/packages/
 userlist.txt
+
+#############################################
+# Banco de dados / Auditoria
+#############################################
+*.sqlite
+*.db
+*.db-wal
+*.db-shm

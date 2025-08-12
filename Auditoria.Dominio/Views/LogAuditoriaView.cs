@@ -6,6 +6,7 @@ namespace Auditoria.Dominio.Views;
 public record LogAuditoriaView
 {
     public int CodigoOriginal { get; set; }
+    public DateTime DataInsercao { get; set; }
     public DadosInseridorView? DadosInseridor { get; set; }
     public DadosAcaoView? DadosAcao { get; set; }
     public Dictionary<string, string>? Dados { get; set; }

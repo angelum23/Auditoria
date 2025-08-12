@@ -32,7 +32,9 @@ public class ApplicationAutoMapperProfile : Profile
         CreateMap<DadosInseridor, DadosInseridorView>();
         CreateMap<DadosAcao, DadosAcaoView>();
         CreateMap<LogAuditoria, LogAuditoriaView>()
-            .ForMember(dest => dest.Dados, opt => opt.MapFrom(src => src.DadoDesserializado));
+            .ForMember(dest => dest.Dados, opt => opt.MapFrom(src => src.DadoDesserializado))
+            .ForMember(dest => dest.DataInsercao, opt => opt.MapFrom<DataInsercaoResolver>());
+
 
         CreateMap<InserirLogAuditoriaDTO, LogAuditoria>()
             .ForMember(dest => dest.DadosInseridor, opt => opt.MapFrom(src => new DadosInseridor
@@ -49,7 +51,6 @@ public class ApplicationAutoMapperProfile : Profile
             .ForMember(dest => dest.DadoDesserializado, opt => opt.MapFrom(src => src.DadoSerializado))
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.DataInsercao, opt => opt.Ignore());
-        //todo: converter para fuso local ao mapear para entidade
 
     }
 }
