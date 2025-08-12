@@ -27,6 +27,7 @@ public class RabbitMqConnectionManager : IRabbitMqConnectionManager
             HostName = _settings.HostName,
             UserName = _settings.UserName,
             Password = _settings.Password,
+            Port = Convert.ToInt32(_settings.Port),
             DispatchConsumersAsync = true
         };
 
